@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    options {
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    tools {
+        maven 'Maven3.9.0'
+        jdk 'jdk11'
+        gradle 'Gradle8.0.2'
+    }
+    parameters {
+        choice(
+            name: 'LUCID_ENVIRONMENT',
+            choices: "dev\nqa\nprod",
+            description: 'Which environment do you want to deploy to?'
+        )
+        string(
+            name: 'LOAD_USERS',
+            defaultValue: '100',
+            description: 'How many users should the load tests simulate?'
+        )
+        string(
+            name: 'LOAD_DURATION',
+            defaultValue: '60',
+            description: 'How soon (in seconds) should the users be ramped up?'
+        )
+    }
+    stages {
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                    rm -rf build/reports/gatling
+                '''
+            }
+        }
+        stage ('Build') {
+            steps {
+                sh 'gradle gatling'
+            }
+            post {
+                success {
+                    gatlingArchive()
+                    dir("build/reports/gatling") {
+                        publishHTML (target : [allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: true,
+                            reportDir: findFiles()[0].name,
+                            reportFiles: 'index.html',
+                            reportName: 'Load Tests',
+                            reportTitles: 'Gatling'
+                        ])
+                    }
+
+                    script {
+                        String message = 'Load Test Results:\n'
+                        message = message + ("\t\n<${env.BUILD_URL}Load_20Tests/|View Results>")
+
+                        slackSend (
+                            channel: '#ci-cd',
+                            message: message
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

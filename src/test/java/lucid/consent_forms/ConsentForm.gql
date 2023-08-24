@@ -1,0 +1,49 @@
+query ConsentForms {
+  forms: lucid_forms_formtemplate(
+    where: { lucid_forms_templatetype: { name: { _eq: "consent_forms" } } }
+    limit: 1
+  ) {
+    id
+    name
+    display_name
+    notes: consent_notes {
+      id
+      status
+      contact_profile_id
+      updated_on
+      sms_events: events(
+        where: { action_type: { _eq: "sms" } }
+        order_by: { event_at: desc }
+        limit: 1
+      ) {
+        action_type
+        event_at
+        object_type
+      }
+      email_events: events(
+        where: { action_type: { _eq: "email" } }
+        order_by: { event_at: desc }
+        limit: 1
+      ) {
+        action_type
+        event_at
+        object_type
+      }
+      signed_by {
+        email
+        first_name
+        last_name
+        id
+      }
+      signed_at: signature(path: "iso")
+      received_by {
+        email
+        first_name
+        last_name
+        id
+      }
+      received_at
+      pdf_request_status
+    }
+  }
+}

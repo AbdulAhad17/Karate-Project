@@ -1,0 +1,15 @@
+{
+  "title": "Lucid Lane Appointment",
+  "description": "",
+  "patients": ["1876105c-fda1-453e-8e34-5839bba7f67f"],
+  "therapists": ["6e17c2d2-e545-4f16-b178-1f96401fc397"],
+  "appointmentType": "1x1",
+  "service_type": "1e2f6f3f-c74f-4085-9780-8617a51c4e6a",
+  "scheduled_time_range": {
+    "start": "2023-11-12T01:15:00.000Z",
+    "end": "2023-11-12T02:15:00.000Z"
+  },
+  "addVideoCall": true,
+  "enable_hold": true
+
+}

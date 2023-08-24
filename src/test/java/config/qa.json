@@ -1,0 +1,13 @@
+{
+    "host": "test.lucidlane.net",
+    "secrets": {
+        "qatherapist01-email": "qatherapist01@lucidlane.com",
+        "qatherapist01-password": "jE5rR6Zi6iNsGJG",
+        
+        "qapatient01-email": "qapatient01@lucidlane.com",
+        "qapatient01-password": "jE5rR6Zi6iNsGJG",
+
+        "provider-email": "shamaim_qa1@email.co",
+        "provider-password": "lucid@123"
+    }
+}
